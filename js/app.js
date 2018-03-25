@@ -13,7 +13,7 @@ let errorMessage = "";
 //email address regular expression
 const emailAddress = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
 //cc regular expression
-const creditCard = /\b\d{4}(| |-)\d{4}\1\d{4}\1\d{4}\b/g;
+const creditCard = /\b\d{4}(| |-)\d{4}\1\d{4}\1\d{1,4}\b/g;
 //zip regular expression
 const zipCode = /^\d{5}(?:[-\s]\d{4})?$/;
 
@@ -21,16 +21,16 @@ const zipCode = /^\d{5}(?:[-\s]\d{4})?$/;
 
 //function for custom job role if "other" option selected
 const jobRoleSelect = () => {
-  if ($("#title").val() !== "other") {
-    $("#other-title").hide();
-  } else {
+  if ($("#title option:selected").val() === "other") {
     $("#other-title").show();
+  } else {
+    $("#other-title").hide();
   }
 }
 //click handler for job role selection
-$("#title").on("click", jobRoleSelect);
+$("#title").change(jobRoleSelect);
 //error/success classes if no value entered
-$('#name, #mail, #cc-num, #zip, #cvv, #other-field').blur(function (){
+$('#name, #mail, #cc-num, #zip, #cvv, #other-field').blur(function() {
 	if ( $(this).val() === "")  {
 		$(this).removeClass('success');
 		$(this).addClass('error');
@@ -58,7 +58,7 @@ $("#mail").on("keypress blur", () => {
 
 //function for shirt type selection
 const shirtDesignSelect = () => {
-  if ($("#design").val() == "Select Theme") {
+  if ($("#design option:selected").val() == "Select Theme") {
     $("#colors-js-puns").hide();
   } else {
     $("#colors-js-puns").show();
@@ -69,15 +69,20 @@ const shirtColorSelect = () => {
   if ($("#design").val() == "js puns") {
     $(".js_puns").show();
     $(".heart_js").hide();
+    $("#color").val("select color");
   } else if ($("#design").val() == "heart js") {
     $(".heart_js").show();
     $(".js_puns").hide();
+    $("#color").val("select color");
   }
 }
+//function to combine both above functions
+const shirtSelector = () => {
+  shirtDesignSelect();
+  shirtColorSelect();
+}
 //click handler for shirt type and color selection
-$("#design").on("click", shirtDesignSelect);
-//click handler for shirt type and color selection
-$("#color").on("focus", shirtColorSelect);
+$("#design").change(shirtSelector);
 
 //****************************Registration Info Section
 
@@ -198,7 +203,7 @@ $("#npm").change( () => {
   return $(".activities").append("<legend id=\"total\">Total: $" + totalCost + "</legend>");
 })
 //click handler for activities' checkboxes
-$( ":checkbox" ).on("click", noConflicts);
+$( ":checkbox" ).change(noConflicts);
 
 //****************************Payment Info Section
 
@@ -218,7 +223,7 @@ const paymentOptionSelect = () => {
   }
 }
 //click handler for payment options
-$("#payment").on("click", paymentOptionSelect);
+$("#payment").change(paymentOptionSelect);
 
 //****************************Form Validation
 
